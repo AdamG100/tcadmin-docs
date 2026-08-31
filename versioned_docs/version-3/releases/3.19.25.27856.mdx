@@ -1,0 +1,35 @@
+---
+sidebar_label: 3.19.25.27856
+date: 2026-08-31
+authors: [tcadmin]
+---
+
+import ReleaseDate from '@site/src/components/ReleaseDate';
+
+# Version 3.19.25.27856
+
+<ReleaseDate />
+
+### New Features
+
+- **Automatic blueprint content sync** — A new `SyncBlueprintContent` script event lets a script keep a blueprint's mods and game updates lists up to date from an external catalog, such as a Minecraft build list. Attached scripts run automatically once a day at a configurable time — a new *Sync Blueprint Content* section on the Maintenance settings page holds the schedule and a *Run now* button. The event fires once per game or Docker blueprint that has a script attached; blueprints without one are never touched.
+- **Modrinth mod support** — Modrinth joins Steam Workshop, CurseForge, Nexus Mods and uMod as a mod provider for Minecraft servers. Once enabled on a blueprint, users can browse Modrinth and install mods and server plugins with one click — no API key is required. The browser detects the service's mod loader (Forge, Fabric, NeoForge, Quilt and others) and Minecraft version and only offers compatible files, mods and plugins are placed in the correct folder automatically, and installed items can be updated or uninstalled from the same page.
+- **Updated Minecraft configuration** — The Minecraft game configuration in the [plugin repository](../getting-started/initial-configuration/plugin-repository.mdx) has been updated to take advantage of the new features in this release: it includes content sync scripts that keep its server builds and mod loaders up to date automatically, and the Modrinth provider is enabled so users can install mods and plugins as soon as the game is imported.
+- **Support for servers with more than 64 CPUs** — CPU affinity is no longer limited to the first 64 processors. Services and virtual servers can be pinned to any CPU on the machine — on Windows this includes processors in every processor group — and the CPU pickers in the service settings, the create service wizard and virtual server settings now scale to the server's real CPU count.
+- **NUMA node binding** — On multi-socket machines, a game service or a virtual server can now be bound to a single NUMA node so it runs on that node's CPUs and memory, improving performance for latency-sensitive game servers. The node selector appears automatically when a server reports more than one node, and CPU affinity is then selected within the chosen node so the two settings can never contradict each other.
+- **Minecraft filters for CurseForge** — When a blueprint's CurseForge provider is configured for Minecraft, the browse page now offers the same mod loader and game version filters as Modrinth, pre-selected from what is detected on the service.
+- **Redesigned Mods and Updates pages** — The service [Mods](../using-tcadmin/common/mods.mdx) and [Updates](../using-tcadmin/games/updates.mdx) pages now show items in collapsible groups with a search box and an installed/not-installed filter, and groups with many entries show the first 10 with a *View all* toggle. Updates and mods can also carry release details — version, release type, release date and file size — entered in their editors and shown as columns on the service pages; a column only appears when at least one item has a value for it. The *Mods* menu link is now shown only when the service's blueprint actually has mods.
+- **Add and translate languages in the panel** — Languages can now be created and translated entirely in the panel. The Languages settings page gained an *Add* dialog with a searchable list of cultures, and each language now opens an edit page with a built-in translation editor: a searchable grid of every translatable text in the panel with the English text alongside, inline editing, and a filter that shows only untranslated entries.
+- **Translatable script and custom link names** — The name and description of custom links, and of scripts that customers see as custom actions or custom icons, can now be translated from a *Translations* button in their editors — joining announcements and email templates. Customers see them in their own language on the service pages, and the translations are included when a script, game or Docker blueprint is exported and imported.
+- **Clear custom command lines on reinstall** — Reinstalling a game service now offers a *Clear custom command lines* option, selected by default, that deletes the service's custom command lines and returns it to the default command line — useful because command lines added by mods usually point at files the reinstall removes. The option only appears for users with access to custom command lines; a selected predefined command line is kept.
+- **Menu identifiers for layout templates** — Every item in the main menu and in the service, blueprint and settings sub-menus now carries a stable `data-tca-nav` identifier, so custom [layout templates](../customizations/layout-templates/reference.mdx) can hide or restyle individual menu entries with plain CSS.
+
+### Bug Fixes
+
+- **Child processes kept running after stop** — On Windows, stopping a service that starts through a launcher (for example a batch file that starts the actual game executable) could leave the game's processes running. All child processes are now stopped reliably.
+- **JSON configuration file errors** — Saving a configuration file that uses the JSON parser could fail when the template used the same variable in more than one place, or used unquoted variables for values such as booleans and lists.
+- **Missing task variables in mod scripts** — The `Task` and `TaskStep` variables were not available to scripts attached to the mod install and uninstall events.
+- **Duplicate menu highlight** — Opening the Curse Mods page could highlight both *Modpacks* and *Curse Mods* in the service menu at the same time.
+- **Database updates on customized MySQL servers** — Database schema updates now always run in strict SQL mode with InnoDB as the storage engine, so they no longer depend on the database server's global configuration.
+- **Leftover AI assistant API keys** — The temporary API key created for each AI assistant chat was disabled when the chat ended but never deleted, so old keys piled up on the user's API Keys page. Session keys are now removed automatically — including any left behind by earlier versions — and the assistant's keys are labeled with an *AI* badge in the list.
+- **Services list on phones** — In the stacked mobile view of the services list, the row labels squeezed the game image and could make the action buttons wrap; the image and buttons now use the full width of the row.
