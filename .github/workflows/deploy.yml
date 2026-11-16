@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+  # Started by dependency-updates.yml after it merges an update.
+  workflow_dispatch:
 
 jobs:
   deploy:
