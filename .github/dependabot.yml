@@ -11,12 +11,14 @@ updates:
       cronjob: "0 3 */2 * *"
     open-pull-requests-limit: 10
     groups:
+      # Minor and patch updates, gathered into one pull request. Each major update
+      # comes as its own pull request, so a breaking one can't hold the rest back.
+      # Dependabot gives each package to the first group listed, so this stays the
+      # only version-updates group.
       npm-updates:
         applies-to: version-updates
+        patterns: ["*"]
         update-types: [minor, patch]
-      npm-major:
-        applies-to: version-updates
-        update-types: [major]
       npm-security:
         applies-to: security-updates
         patterns: ["*"]
